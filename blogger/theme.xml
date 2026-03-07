@@ -9,21 +9,53 @@
   <meta charset="UTF-8"/>
   <meta http-equiv="Content-Language" content="en, zh"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title><data:blog.pageTitle/></title>
+
+  <!-- Dynamic Title: Page/Post Name | Claude Bridge -->
+  <b:if cond='data:blog.homepageUrl == data:blog.url'>
+    <title>Claude Bridge — Control Claude Code From Anywhere</title>
+  <b:else/>
+    <title><data:blog.pageName/> | Claude Bridge</title>
+  </b:if>
+
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
 
-  <!-- SEO -->
-  <meta name="description" content="Claude Bridge — Telegram to Claude Code CLI bridge. Control Claude Code from anywhere via your phone."/>
+  <!-- Dynamic SEO Meta Description -->
+  <b:if cond='data:blog.homepageUrl == data:blog.url'>
+    <meta name="description" content="Claude Bridge — open-source Telegram to Claude Code CLI bridge. Control Claude Code from anywhere via your phone. Zero extra API cost."/>
+  <b:elseif cond='data:blog.pageType == &quot;item&quot;'/>
+    <meta expr:content='data:blog.pageName + &quot; — Claude Bridge blog post&quot;' name="description"/>
+  <b:elseif cond='data:blog.pageType == &quot;static_page&quot;'/>
+    <meta expr:content='data:blog.pageName + &quot; — Claude Bridge&quot;' name="description"/>
+  <b:else/>
+    <meta name="description" content="Claude Bridge — Telegram to Claude Code CLI bridge. Changelog and technical articles."/>
+  </b:if>
   <meta name="robots" content="index, follow"/>
   <link rel="canonical" expr:href="data:blog.canonicalUrl"/>
 
   <!-- Open Graph -->
   <meta property="og:type" content="website"/>
-  <meta property="og:title" expr:content="data:blog.pageTitle"/>
-  <meta property="og:description" content="Telegram to Claude Code CLI bridge — control Claude Code from anywhere"/>
+  <b:if cond='data:blog.homepageUrl == data:blog.url'>
+    <meta property="og:title" content="Claude Bridge — Control Claude Code From Anywhere"/>
+    <meta property="og:description" content="Open-source Telegram to Claude Code CLI bridge. Zero extra API cost, multi-project management, session persistence."/>
+  <b:else/>
+    <meta expr:content='data:blog.pageName + &quot; | Claude Bridge&quot;' property="og:title"/>
+    <meta expr:content='data:blog.pageName + &quot; — Claude Bridge&quot;' property="og:description"/>
+  </b:if>
   <meta property="og:url" expr:content="data:blog.canonicalUrl"/>
   <meta property="og:site_name" content="Claude Bridge"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:image" content="https://claudebridge.blogspot.com/favicon.ico"/>
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary"/>
+  <b:if cond='data:blog.homepageUrl == data:blog.url'>
+    <meta name="twitter:title" content="Claude Bridge — Control Claude Code From Anywhere"/>
+    <meta name="twitter:description" content="Open-source Telegram to Claude Code CLI bridge. Zero extra API cost."/>
+  <b:else/>
+    <meta expr:content='data:blog.pageName + &quot; | Claude Bridge&quot;' name="twitter:title"/>
+    <meta expr:content='data:blog.pageName + &quot; — Claude Bridge&quot;' name="twitter:description"/>
+  </b:if>
 
   <!-- Mobile Web App -->
   <meta name='theme-color' content='#0a0a0f'/>
@@ -39,7 +71,7 @@
     &quot;@type&quot;: &quot;WebSite&quot;,
     &quot;name&quot;: &quot;Claude Bridge&quot;,
     &quot;url&quot;: &quot;https://claudebridge.blogspot.com&quot;,
-    &quot;description&quot;: &quot;Telegram to Claude Code CLI bridge — control Claude Code from anywhere via your phone&quot;,
+    &quot;description&quot;: &quot;Open-source Telegram to Claude Code CLI bridge — control Claude Code from anywhere via your phone&quot;,
     &quot;inLanguage&quot;: [&quot;en&quot;, &quot;zh&quot;]
   }
   </script>
@@ -96,6 +128,8 @@ body {
   line-height: 1.65;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 a { text-decoration: none; color: var(--accent); }
 a:hover { color: var(--accent-hover); }
@@ -110,7 +144,7 @@ a:hover { color: var(--accent-hover); }
 }
 .header-inner {
   max-width: 980px; margin: 0 auto;
-  padding: 0 max(22px, env(safe-area-inset-left));
+  padding: 0 22px;
   height: 52px;
   display: flex; align-items: center; justify-content: space-between;
 }
@@ -122,11 +156,48 @@ a:hover { color: var(--accent-hover); }
   color: var(--text-primary);
 }
 .logo-text span { color: var(--text-muted); font-weight: 400; font-size: 13px; margin-left: 6px; }
+
+/* Desktop nav */
 .header-nav { display: flex; gap: 20px; font-size: 13px; }
 .header-nav a { color: var(--text-secondary); transition: color 0.2s; }
 .header-nav a:hover { color: var(--text-primary); }
 
-/* === Hero Section (Homepage only) === */
+/* Hamburger button (mobile only) */
+.menu-toggle {
+  display: none;
+  background: none; border: none; cursor: pointer;
+  width: 44px; height: 44px;
+  align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.menu-toggle svg { width: 22px; height: 22px; stroke: var(--text-secondary); }
+.menu-toggle:hover svg { stroke: var(--text-primary); }
+
+/* Mobile nav overlay */
+.mobile-nav {
+  display: none;
+  position: fixed; top: 52px; left: 0; right: 0; bottom: 0;
+  background: rgba(10, 10, 15, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 99;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 48px; gap: 8px;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  color: var(--text-secondary);
+  font-size: 18px; font-weight: 500;
+  padding: 14px 32px;
+  border-radius: var(--radius-md);
+  transition: all 0.2s;
+  width: 280px; text-align: center;
+}
+.mobile-nav a:hover { color: var(--text-primary); background: var(--bg-card); }
+
+/* === Hero Section === */
 .hero {
   max-width: 980px; margin: 0 auto;
   padding: 80px 22px 60px;
@@ -145,7 +216,7 @@ a:hover { color: var(--accent-hover); }
   margin-bottom: 24px;
 }
 .hero h1 {
-  font-size: clamp(32px, 5vw, 52px);
+  font-size: clamp(28px, 5vw, 52px);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.1;
@@ -156,7 +227,7 @@ a:hover { color: var(--accent-hover); }
   background-clip: text;
 }
 .hero-sub {
-  font-size: 18px;
+  font-size: clamp(15px, 2.5vw, 18px);
   color: var(--text-secondary);
   max-width: 560px;
   margin: 0 auto 32px;
@@ -187,7 +258,7 @@ a:hover { color: var(--accent-hover); }
 .features {
   max-width: 980px; margin: 0 auto;
   padding: 0 22px 60px;
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
 }
 .feature-card {
   background: var(--bg-card);
@@ -270,13 +341,13 @@ a:hover { color: var(--accent-hover); }
   color: var(--purple);
 }
 
-/* === Single Post View === */
+/* === Single Post / Page View === */
 .post-view {
   max-width: 720px; margin: 0 auto;
   padding: 40px 22px 80px;
 }
 .post-view h1.post-view-title {
-  font-size: clamp(24px, 4vw, 36px);
+  font-size: clamp(22px, 4vw, 36px);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -295,13 +366,13 @@ a:hover { color: var(--accent-hover); }
   color: var(--text-secondary);
 }
 .post-body h2 {
-  font-size: 22px; font-weight: 600;
+  font-size: clamp(18px, 3vw, 22px); font-weight: 600;
   color: var(--text-primary);
   margin: 32px 0 12px;
   letter-spacing: -0.01em;
 }
 .post-body h3 {
-  font-size: 18px; font-weight: 600;
+  font-size: clamp(16px, 2.5vw, 18px); font-weight: 600;
   color: var(--text-primary);
   margin: 24px 0 8px;
 }
@@ -343,12 +414,26 @@ a:hover { color: var(--accent-hover); }
   color: var(--text-muted);
 }
 
-/* === Responsive === */
+/* === Responsive — Tablet === */
+@media (max-width: 768px) {
+  .features { grid-template-columns: 1fr; }
+  .hero { padding: 60px 20px 48px; }
+  .hero-actions { gap: 10px; }
+  .btn { padding: 11px 22px; font-size: 13px; }
+  .post-view { padding: 32px 20px 60px; }
+  .logo-text span { display: none; }
+}
+
+/* === Responsive — Mobile === */
 @media (max-width: 640px) {
+  .header-nav { display: none; }
+  .menu-toggle { display: flex; }
   .hero { padding: 48px 16px 40px; }
   .features { padding: 0 16px 40px; }
-  .header-nav { gap: 12px; }
   .feature-card { padding: 20px; }
+  .posts-section { padding: 0 16px 60px; }
+  .post-card { padding: 16px 18px; }
+  .footer { padding: 20px 16px; }
 }
   ]]></b:skin>
 </head>
@@ -366,8 +451,22 @@ a:hover { color: var(--accent-hover); }
       <a href='/p/why-claude-bridge.html'>Why CB?</a>
       <a href='#changelog'>Changelog</a>
     </nav>
+    <button class='menu-toggle' id='menuToggle' aria-label='Menu'>
+      <svg viewBox='0 0 24 24' fill='none' stroke-width='2' stroke-linecap='round'>
+        <line x1='3' y1='6' x2='21' y2='6'/>
+        <line x1='3' y1='12' x2='21' y2='12'/>
+        <line x1='3' y1='18' x2='21' y2='18'/>
+      </svg>
+    </button>
   </div>
 </header>
+
+<!-- Mobile nav overlay -->
+<nav class='mobile-nav' id='mobileNav'>
+  <a expr:href='data:blog.homepageUrl' onclick='closeMobileNav()'>Home</a>
+  <a href='/p/why-claude-bridge.html' onclick='closeMobileNav()'>Why CB?</a>
+  <a href='#changelog' onclick='closeMobileNav()'>Changelog</a>
+</nav>
 
 <!-- Main Content -->
 <main>
@@ -434,9 +533,27 @@ a:hover { color: var(--accent-hover); }
   claudebridge.blogspot.com &#xB7; Built with Claude Max
 </footer>
 
-<!-- Render posts via JSONP callback -->
+<!-- Scripts -->
 <script type='text/javascript'>
 //<![CDATA[
+/* Hamburger menu */
+(function(){
+  var btn = document.getElementById('menuToggle');
+  var nav = document.getElementById('mobileNav');
+  if(!btn || !nav) return;
+  btn.addEventListener('click', function(){
+    var open = nav.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  window.closeMobileNav = function(){
+    nav.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  };
+})();
+
+/* Render posts via JSONP */
 function renderBlogPosts(data){
   var container = document.getElementById('posts-container');
   if(!container) return;
@@ -477,7 +594,6 @@ function renderBlogPosts(data){
 //]]>
 </script>
 <script expr:src='&quot;/feeds/posts/default?alt=json-in-script&amp;callback=renderBlogPosts&amp;max-results=10&quot;'/>
-
 
 </body>
 </html>
