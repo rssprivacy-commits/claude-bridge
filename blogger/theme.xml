@@ -363,6 +363,7 @@ a:hover { color: var(--accent-hover); }
     </a>
     <nav class='header-nav'>
       <a expr:href='data:blog.homepageUrl'>Home</a>
+      <a href='/p/why-claude-bridge.html'>Why CB?</a>
       <a href='#changelog'>Changelog</a>
     </nav>
   </div>
@@ -382,6 +383,7 @@ a:hover { color: var(--accent-hover); }
     </p>
     <div class='hero-actions'>
       <a class='btn btn-primary' href='#changelog'>Get Started</a>
+      <a class='btn btn-secondary' href='/p/why-claude-bridge.html'>Why CB?</a>
       <a class='btn btn-secondary' expr:href='data:blog.homepageUrl'>View Changelog</a>
     </div>
   </section>
