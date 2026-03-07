@@ -404,6 +404,113 @@ a:hover { color: var(--accent-hover); }
   color: var(--text-secondary);
 }
 
+/* === Changelog Toolbar (filter pills + search) === */
+.changelog-toolbar {
+  display: flex; align-items: center;
+  gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.filter-pills { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+.filter-pill {
+  font-size: 12px; font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  white-space: nowrap;
+}
+.filter-pill:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+.filter-pill.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.filter-pill .pill-count {
+  font-size: 10px;
+  opacity: 0.7;
+  margin-left: 4px;
+}
+.changelog-search {
+  position: relative;
+  min-width: 180px;
+  flex-shrink: 0;
+}
+.changelog-search input {
+  width: 100%;
+  padding: 7px 12px 7px 32px;
+  font-size: 13px;
+  font-family: var(--font-sans);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.changelog-search input::placeholder { color: var(--text-muted); }
+.changelog-search input:focus { border-color: var(--accent); }
+.changelog-search svg {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  width: 14px; height: 14px; stroke: var(--text-muted); fill: none;
+}
+.filter-select {
+  font-family: var(--font-sans); font-size: 13px;
+  padding: 7px 28px 7px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  outline: none; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a4a60' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 0.2s;
+  flex-shrink: 0;
+}
+.filter-select:focus { border-color: var(--accent); }
+.changelog-stats {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.changelog-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.changelog-empty span { display: block; font-size: 32px; margin-bottom: 12px; }
+mark {
+  background: rgba(124, 92, 252, 0.3);
+  color: var(--text-primary);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+/* === View All Link === */
+.view-all-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  padding: 14px;
+  font-size: 14px; font-weight: 500;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: all 0.2s var(--ease-out);
+}
+.view-all-link:hover {
+  color: var(--accent-hover);
+  border-color: var(--border-hover);
+  background: var(--bg-card);
+}
+
 /* === Footer === */
 .footer {
   max-width: 980px; margin: 0 auto;
@@ -434,6 +541,8 @@ a:hover { color: var(--accent-hover); }
   .posts-section { padding: 0 16px 60px; }
   .post-card { padding: 16px 18px; }
   .footer { padding: 20px 16px; }
+  .changelog-toolbar { flex-direction: column; align-items: stretch; }
+  .changelog-search { min-width: 0; }
 }
   ]]></b:skin>
 </head>
@@ -449,7 +558,7 @@ a:hover { color: var(--accent-hover); }
     <nav class='header-nav'>
       <a expr:href='data:blog.homepageUrl'>Home</a>
       <a href='/p/why-claude-bridge.html'>Why CB?</a>
-      <a href='#changelog'>Changelog</a>
+      <a href='/p/changelog.html'>Changelog</a>
     </nav>
     <button class='menu-toggle' id='menuToggle' aria-label='Menu'>
       <svg viewBox='0 0 24 24' fill='none' stroke-width='2' stroke-linecap='round'>
@@ -465,7 +574,7 @@ a:hover { color: var(--accent-hover); }
 <nav class='mobile-nav' id='mobileNav'>
   <a expr:href='data:blog.homepageUrl' onclick='closeMobileNav()'>Home</a>
   <a href='/p/why-claude-bridge.html' onclick='closeMobileNav()'>Why CB?</a>
-  <a href='#changelog' onclick='closeMobileNav()'>Changelog</a>
+  <a href='/p/changelog.html' onclick='closeMobileNav()'>Changelog</a>
 </nav>
 
 <!-- Main Content -->
@@ -481,7 +590,7 @@ a:hover { color: var(--accent-hover); }
       Run code, manage projects, and deploy — all from your phone.
     </p>
     <div class='hero-actions'>
-      <a class='btn btn-primary' href='#changelog'>Get Started</a>
+      <a class='btn btn-primary' href='/p/changelog.html'>Get Started</a>
       <a class='btn btn-secondary' href='/p/why-claude-bridge.html'>Why CB?</a>
       <a class='btn btn-secondary' expr:href='data:blog.homepageUrl'>View Changelog</a>
     </div>
@@ -517,16 +626,49 @@ a:hover { color: var(--accent-hover); }
 
 <!-- Static Page content (rendered via JS on /p/ URLs) -->
 <b:if cond='data:blog.pageType == &quot;static_page&quot;'>
+  <!-- Changelog page: filter toolbar + full posts list -->
+  <div id='changelog-page' style='display:none;'>
+    <section class='posts-section'>
+      <div class='section-title'>Changelog</div>
+      <div class='changelog-toolbar'>
+        <div class='filter-pills' id='filterPills'></div>
+        <div class='changelog-search'>
+          <svg viewBox='0 0 24 24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+            <circle cx='11' cy='11' r='8'/>
+            <line x1='21' y1='21' x2='16.65' y2='16.65'/>
+          </svg>
+          <input type='text' id='changelogSearch' placeholder='Search changelog...' autocomplete='off'/>
+        </div>
+        <select class='filter-select' id='cl-month-select' aria-label='Filter by month'>
+          <option value='all'>All months</option>
+        </select>
+        <select class='filter-select' id='cl-day-select' aria-label='Filter by day'>
+          <option value='all'>All days</option>
+        </select>
+      </div>
+      <div class='changelog-stats' id='changelogStats'></div>
+      <div id='changelog-posts-container'><div style='color:var(--text-muted);font-size:13px;'>Loading...</div></div>
+    </section>
+  </div>
+  <!-- Other static pages: page content -->
   <article class='post-view' id='page-content'>
     <div style='color:var(--text-muted);font-size:13px;'>Loading...</div>
   </article>
 </b:if>
 
-<!-- Blog Posts (rendered via JSON Feed API, hidden on static pages) -->
-<b:if cond='data:blog.pageType != &quot;static_page&quot;'>
-<section class='posts-section' id='changelog'>
-  <div class='section-title'>Latest Updates</div>
+<!-- Homepage: Recent posts preview -->
+<b:if cond='data:view.isHomepage'>
+<section class='posts-section'>
+  <div class='section-title'>Recent Updates</div>
   <div id='posts-container'><div style='color:var(--text-muted);font-size:13px;'>Loading posts...</div></div>
+  <a class='view-all-link' href='/p/changelog.html'>View all updates &#x2192;</a>
+</section>
+</b:if>
+
+<!-- Single post view (rendered via JSONP) -->
+<b:if cond='data:blog.pageType == &quot;item&quot;'>
+<section class='posts-section'>
+  <div id='posts-container'><div style='color:var(--text-muted);font-size:13px;'>Loading...</div></div>
 </section>
 </b:if>
 
@@ -562,8 +704,196 @@ a:hover { color: var(--accent-hover); }
   };
 })();
 
+/* Detect if current page is the changelog page */
+var isChangelogPage = window.location.pathname === '/p/changelog.html';
+
+/* On changelog page: show changelog container, hide page-content */
+if(isChangelogPage){
+  var clEl = document.getElementById('changelog-page');
+  var pcEl = document.getElementById('page-content');
+  if(clEl) clEl.style.display = 'block';
+  if(pcEl) pcEl.style.display = 'none';
+}
+
+/* Changelog: filter + search engine */
+var clAllPosts = [];
+var clActiveFilter = 'all';
+var clFilterMonth = 'all';
+var clFilterDay = 'all';
+var clSearchQuery = '';
+
+function renderChangelogPosts(data){
+  var container = document.getElementById('changelog-posts-container');
+  if(!container) return;
+  try {
+    var entries = data.feed.entry;
+    if(!entries || entries.length === 0){
+      container.innerHTML='<div class="changelog-empty"><span>&#x1F4ED;</span>No updates yet</div>';
+      return;
+    }
+    clAllPosts = [];
+    var labelSet = {};
+    for(var i=0; i<entries.length; i++){
+      var e = entries[i];
+      var title = e.title.$t || '';
+      var published = e.published.$t || '';
+      var dateStr = published.substring(0,10);
+      var url = '';
+      for(var j=0; j<e.link.length; j++){
+        if(e.link[j].rel === 'alternate'){ url = e.link[j].href; break; }
+      }
+      var month = dateStr.substring(0,7);
+      var text = '';
+      if(e.content) text = e.content.$t.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+      var snippet = text.substring(0,280) + (text.length > 280 ? '...' : '');
+      var labels = [];
+      if(e.category){
+        for(var k=0; k<e.category.length; k++){
+          var lb = e.category[k].term;
+          labels.push(lb);
+          labelSet[lb] = (labelSet[lb] || 0) + 1;
+        }
+      }
+      clAllPosts.push({title:title, date:dateStr, month:month, url:url, snippet:snippet, text:text, labels:labels});
+    }
+    /* Build filter pills */
+    var pillsEl = document.getElementById('filterPills');
+    if(pillsEl){
+      var ph = '<button class="filter-pill active" data-filter="all">All<span class="pill-count">'+clAllPosts.length+'</span></button>';
+      var sortedLabels = Object.keys(labelSet).sort();
+      for(var m=0; m<sortedLabels.length; m++){
+        var sl = sortedLabels[m];
+        ph += '<button class="filter-pill" data-filter="'+sl+'">'+sl+'<span class="pill-count">'+labelSet[sl]+'</span></button>';
+      }
+      pillsEl.innerHTML = ph;
+      var pills = pillsEl.querySelectorAll('.filter-pill');
+      for(var n=0; n<pills.length; n++){
+        pills[n].addEventListener('click', function(){
+          clActiveFilter = this.getAttribute('data-filter');
+          var all = pillsEl.querySelectorAll('.filter-pill');
+          for(var x=0; x<all.length; x++) all[x].classList.remove('active');
+          this.classList.add('active');
+          clRenderFiltered();
+        });
+      }
+    }
+    /* Search handler */
+    var searchEl = document.getElementById('changelogSearch');
+    if(searchEl){
+      var debounce = null;
+      searchEl.addEventListener('input', function(){
+        clearTimeout(debounce);
+        var self = this;
+        debounce = setTimeout(function(){ clSearchQuery = self.value.trim().toLowerCase(); clRenderFiltered(); }, 150);
+      });
+    }
+    /* Populate month select */
+    var monthSet = {};
+    for(var mi=0; mi<clAllPosts.length; mi++) monthSet[clAllPosts[mi].month] = (monthSet[clAllPosts[mi].month]||0)+1;
+    var monthEl = document.getElementById('cl-month-select');
+    if(monthEl){
+      var mh = '<option value="all">All months</option>';
+      var sortedMonths = Object.keys(monthSet).sort().reverse();
+      for(var mn=0; mn<sortedMonths.length; mn++){
+        mh += '<option value="'+sortedMonths[mn]+'">'+sortedMonths[mn]+' ('+monthSet[sortedMonths[mn]]+')</option>';
+      }
+      monthEl.innerHTML = mh;
+      monthEl.addEventListener('change', function(){
+        clFilterMonth = this.value;
+        /* Repopulate day select based on chosen month */
+        clFilterDay = 'all';
+        clPopulateDays();
+        clRenderFiltered();
+      });
+    }
+    /* Day select handler */
+    var dayEl = document.getElementById('cl-day-select');
+    if(dayEl){
+      dayEl.addEventListener('change', function(){ clFilterDay = this.value; clRenderFiltered(); });
+    }
+    clPopulateDays();
+    clRenderFiltered();
+  } catch(ex) {
+    container.innerHTML='<div style="color:#f87171">Error: '+ex.message+'</div>';
+  }
+}
+
+function clPopulateDays(){
+  var dayEl = document.getElementById('cl-day-select');
+  if(!dayEl) return;
+  var daySet = {};
+  for(var i=0; i<clAllPosts.length; i++){
+    var p = clAllPosts[i];
+    if(clFilterMonth !== 'all' && p.month !== clFilterMonth) continue;
+    daySet[p.date] = (daySet[p.date]||0)+1;
+  }
+  var dh = '<option value="all">All days</option>';
+  var sortedDays = Object.keys(daySet).sort().reverse();
+  for(var d=0; d<sortedDays.length; d++){
+    dh += '<option value="'+sortedDays[d]+'">'+sortedDays[d]+' ('+daySet[sortedDays[d]]+')</option>';
+  }
+  dayEl.innerHTML = dh;
+}
+
+function clRenderFiltered(){
+  var container = document.getElementById('changelog-posts-container');
+  var statsEl = document.getElementById('changelogStats');
+  if(!container) return;
+  var filtered = [];
+  for(var i=0; i<clAllPosts.length; i++){
+    var p = clAllPosts[i];
+    if(clActiveFilter !== 'all'){
+      var hasLabel = false;
+      for(var j=0; j<p.labels.length; j++){ if(p.labels[j] === clActiveFilter){ hasLabel = true; break; } }
+      if(!hasLabel) continue;
+    }
+    if(clFilterMonth !== 'all' && p.month !== clFilterMonth) continue;
+    if(clFilterDay !== 'all' && p.date !== clFilterDay) continue;
+    if(clSearchQuery){
+      if(p.title.toLowerCase().indexOf(clSearchQuery) === -1 && p.text.toLowerCase().indexOf(clSearchQuery) === -1) continue;
+    }
+    filtered.push(p);
+  }
+  if(statsEl){
+    if(clSearchQuery || clActiveFilter !== 'all' || clFilterMonth !== 'all' || clFilterDay !== 'all'){
+      statsEl.textContent = filtered.length + ' of ' + clAllPosts.length + ' entries';
+    } else {
+      statsEl.textContent = clAllPosts.length + ' entries';
+    }
+  }
+  if(filtered.length === 0){
+    container.innerHTML = '<div class="changelog-empty"><span>&#x1F50D;</span>No matching entries'
+      + (clSearchQuery ? ' for "'+clSearchQuery+'"' : '')+'</div>';
+    return;
+  }
+  var html = '';
+  for(var i=0; i<filtered.length; i++){
+    var p = filtered[i];
+    var title = p.title;
+    var snippet = p.snippet;
+    if(clSearchQuery){
+      var re = new RegExp('('+clSearchQuery.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+      title = title.replace(re, '<mark>$1</mark>');
+      snippet = snippet.replace(re, '<mark>$1</mark>');
+    }
+    var labels = '';
+    if(p.labels.length > 0){
+      labels = '<div class="post-labels">';
+      for(var k=0; k<p.labels.length; k++) labels += '<span class="label-tag">'+p.labels[k]+'</span>';
+      labels += '</div>';
+    }
+    html += '<a class="post-card" href="'+p.url+'">'
+      + '<div class="post-title">'+title+'</div>'
+      + '<div class="post-meta">'+p.date+'</div>'
+      + '<div class="post-snippet">'+snippet+'</div>'
+      + labels + '</a>';
+  }
+  container.innerHTML = html;
+}
+
 /* Render static page content via JSONP */
 function renderPageContent(data){
+  if(isChangelogPage) return;
   var container = document.getElementById('page-content');
   if(!container) return;
   try {
@@ -591,40 +921,82 @@ function renderPageContent(data){
   }
 }
 
-/* Render posts via JSONP */
+/* Render a list of post cards into a container */
+function renderPostList(entries, container){
+  var html = '';
+  for(var i=0; i<entries.length; i++){
+    var e = entries[i];
+    var title = e.title.$t || '';
+    var published = e.published.$t || '';
+    var dateStr = published.substring(0,10);
+    var url = '';
+    for(var j=0; j<e.link.length; j++){
+      if(e.link[j].rel === 'alternate'){ url = e.link[j].href; break; }
+    }
+    var snippet = '';
+    if(e.content) snippet = e.content.$t.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').substring(0,280).trim() + '...';
+    var labels = '';
+    if(e.category){
+      labels = '<div class="post-labels">';
+      for(var k=0; k<e.category.length; k++){
+        labels += '<span class="label-tag">' + e.category[k].term + '</span>';
+      }
+      labels += '</div>';
+    }
+    html += '<a class="post-card" href="'+url+'">'
+      + '<div class="post-title">'+title+'</div>'
+      + '<div class="post-meta">'+dateStr+'</div>'
+      + '<div class="post-snippet">'+snippet+'</div>'
+      + labels + '</a>';
+  }
+  container.innerHTML = html;
+}
+
+/* Render posts via JSONP — homepage (list) or single post (full view) */
 function renderBlogPosts(data){
   var container = document.getElementById('posts-container');
   if(!container) return;
   try {
     var entries = data.feed.entry;
     if(!entries || entries.length === 0){ container.innerHTML='<div style="color:var(--text-muted)">No posts yet</div>'; return; }
-    var html = '';
-    for(var i=0; i<entries.length; i++){
-      var e = entries[i];
-      var title = e.title.$t || '';
-      var published = e.published.$t || '';
-      var dateStr = published.substring(0,10);
-      var url = '';
-      for(var j=0; j<e.link.length; j++){
-        if(e.link[j].rel === 'alternate'){ url = e.link[j].href; break; }
-      }
-      var snippet = '';
-      if(e.content) snippet = e.content.$t.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').substring(0,280).trim() + '...';
-      var labels = '';
-      if(e.category){
-        labels = '<div class="post-labels">';
-        for(var k=0; k<e.category.length; k++){
-          labels += '<span class="label-tag">' + e.category[k].term + '</span>';
+    var path = window.location.pathname;
+    /* Single post view: match by URL and render full content */
+    if(path.indexOf('/p/') === -1 && path !== '/'){
+      for(var i=0; i<entries.length; i++){
+        var e = entries[i];
+        for(var j=0; j<e.link.length; j++){
+          if(e.link[j].rel === 'alternate'){
+            var u = new URL(e.link[j].href);
+            if(u.pathname === path){
+              var title = e.title.$t || '';
+              var published = e.published.$t || '';
+              var dateStr = published.substring(0,10);
+              var body = e.content ? e.content.$t : '';
+              var labels = '';
+              if(e.category){
+                labels = '<div class="post-labels" style="margin-bottom:24px">';
+                for(var k=0; k<e.category.length; k++){
+                  labels += '<span class="label-tag">' + e.category[k].term + '</span>';
+                }
+                labels += '</div>';
+              }
+              container.innerHTML = '<article class="post-view">'
+                + '<h1 class="post-view-title">'+title+'</h1>'
+                + '<div class="post-view-meta">'+dateStr+'</div>'
+                + labels
+                + '<div class="post-body">'+body+'</div>'
+                + '<a class="view-all-link" href="/p/changelog.html" style="margin-top:40px">&#x2190; Back to Changelog</a>'
+                + '</article>';
+              return;
+            }
+          }
         }
-        labels += '</div>';
       }
-      html += '<a class="post-card" href="'+url+'">'
-        + '<div class="post-title">'+title+'</div>'
-        + '<div class="post-meta">'+dateStr+'</div>'
-        + '<div class="post-snippet">'+snippet+'</div>'
-        + labels + '</a>';
+      container.innerHTML='<div style="color:var(--text-muted)">Post not found</div>';
+      return;
     }
-    container.innerHTML = html;
+    /* Homepage: post card list */
+    renderPostList(entries, container);
   } catch(ex) {
     container.innerHTML='<div style="color:#f87171">Error: '+ex.message+'</div>';
   }
@@ -633,8 +1005,11 @@ function renderBlogPosts(data){
 </script>
 <b:if cond='data:blog.pageType == &quot;static_page&quot;'>
   <script expr:src='&quot;/feeds/pages/default?alt=json-in-script&amp;callback=renderPageContent&amp;max-results=20&quot;'/>
+  <script expr:src='&quot;/feeds/posts/default?alt=json-in-script&amp;callback=renderChangelogPosts&amp;max-results=50&quot;'/>
+<b:elseif cond='data:blog.pageType == &quot;item&quot;'/>
+  <script expr:src='&quot;/feeds/posts/default?alt=json-in-script&amp;callback=renderBlogPosts&amp;max-results=50&quot;'/>
 <b:else/>
-  <script expr:src='&quot;/feeds/posts/default?alt=json-in-script&amp;callback=renderBlogPosts&amp;max-results=10&quot;'/>
+  <script expr:src='&quot;/feeds/posts/default?alt=json-in-script&amp;callback=renderBlogPosts&amp;max-results=3&quot;'/>
 </b:if>
 
 </body>
