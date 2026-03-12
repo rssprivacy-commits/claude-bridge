@@ -1,0 +1,29 @@
+<p>Claude Bridge v1.5.0 brings architectural stability fixes, ElevenLabs account management, and smarter Telegram interactions.</p>
+
+<h3>Highlights</h3>
+
+<ul>
+<li><strong><code>/el</code> command</strong> — ElevenLabs account dashboard right in Telegram. Check credits usage, voice slots, clone capabilities, and next billing amount without logging into the web console.</li>
+<li><strong>21 ElevenLabs voices</strong> — expanded from 5 to the full Creator voice library. Male and female voices with diverse styles, all selectable via <code>/voice</code> with live preview.</li>
+<li><strong>Smart model routing</strong> — short simple queries (&lt;80 chars) auto-downgrade to Sonnet + low effort for faster responses. Complex tasks still route to your configured model.</li>
+<li><strong>Telegram behavior constraints</strong> — system context injection enforces concise replies, action-first style, and proper sensitive data handling.</li>
+</ul>
+
+<h3>Architecture Fixes</h3>
+
+<p>Three stability issues that caused intermittent errors in production have been fixed:</p>
+
+<ul>
+<li><strong>Task GC leak</strong> — fire-and-forget <code>asyncio.create_task()</code> calls (cron scheduler, agent loop) had no strong reference. GC could destroy pending tasks, causing "Task was destroyed" errors. New <code>_create_background_task()</code> holds references with auto-cleanup.</li>
+<li><strong>Result type safety</strong> — Claude CLI occasionally returns unexpected JSON types. All 7 invoke result chains now pass through <code>_safe_result()</code> normalization.</li>
+<li><strong>Stream buffer overflow</strong> — <code>readline()</code> with a 4MB limit still overflowed on very large tool results. Replaced with manual chunked reading — no size limit, no more "Separator/chunk exceed limit" crashes.</li>
+</ul>
+
+<h3>Security</h3>
+
+<ul>
+<li>Sensitive messages (passwords, tokens) auto-deleted from chat after processing</li>
+<li>ElevenLabs account upgraded to Creator plan with 2FA enabled</li>
+</ul>
+
+<p>Full changelog on <a href="https://github.com/rssprivacy-commits/claude-bridge/blob/main/CHANGELOG.md">GitHub</a>.</p>
