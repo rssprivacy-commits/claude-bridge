@@ -557,6 +557,7 @@ mark {
     </a>
     <nav class='header-nav'>
       <a expr:href='data:blog.homepageUrl'>Home</a>
+      <a href='/p/features.html'>Features</a>
       <a href='/p/why-claude-bridge.html'>Why CB?</a>
       <a href='/p/changelog.html'>Changelog</a>
     </nav>
@@ -573,6 +574,7 @@ mark {
 <!-- Mobile nav overlay -->
 <nav class='mobile-nav' id='mobileNav'>
   <a expr:href='data:blog.homepageUrl' onclick='closeMobileNav()'>Home</a>
+  <a href='/p/features.html' onclick='closeMobileNav()'>Features</a>
   <a href='/p/why-claude-bridge.html' onclick='closeMobileNav()'>Why CB?</a>
   <a href='/p/changelog.html' onclick='closeMobileNav()'>Changelog</a>
 </nav>
