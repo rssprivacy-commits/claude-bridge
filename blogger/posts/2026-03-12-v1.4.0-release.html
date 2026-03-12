@@ -1,0 +1,54 @@
+<h2>v1.4.0 Release Notes</h2>
+
+<p>Claude Bridge v1.4.0 adds voice reply, a full voice settings panel, ElevenLabs integration, and automatic sensitive data masking.</p>
+
+<h3>Voice Reply — Bot Talks Back</h3>
+
+<p>Send a voice message to the bot, and it now replies with <strong>both text and voice</strong>. Your voice is transcribed locally via Whisper, sent to Claude, and the response is converted to speech.</p>
+
+<p>Two TTS engines are supported:</p>
+<ul>
+<li><strong>edge-tts</strong> — free, fast (~1.4s), 8 Chinese voices including Liaoning and Shaanxi dialects</li>
+<li><strong>ElevenLabs</strong> — cloud API, natural-sounding voices with the eleven_v3 model. Sarah v3 delivers excellent Chinese speech quality</li>
+</ul>
+
+<h3>New: <code>/voice</code> — Voice Settings Panel</h3>
+
+<p>Full control over voice reply from Telegram:</p>
+<ul>
+<li><strong>Toggle</strong> voice reply on/off</li>
+<li><strong>Switch engine</strong> between edge-tts and ElevenLabs with one tap</li>
+<li><strong>Select voice</strong> from 8 edge-tts or 5 ElevenLabs voices</li>
+<li><strong>Live preview</strong> — tap Preview next to any voice to hear a sample before selecting</li>
+</ul>
+
+<p>All settings persist to SQLite and take effect immediately — no restart needed.</p>
+
+<h3>ElevenLabs Integration</h3>
+
+<p>We evaluated five TTS solutions for Apple Silicon:</p>
+
+<table>
+<tr><th>Solution</th><th>78-char latency</th><th>200-char latency</th><th>Verdict</th></tr>
+<tr><td>edge-tts</td><td>1.4s</td><td>~2s</td><td>Fastest, free</td></tr>
+<tr><td>ElevenLabs API</td><td>2.8s</td><td>~3s</td><td>Best quality</td></tr>
+<tr><td>Qwen3-TTS MLX</td><td>3.0s</td><td>7.8s</td><td>Best local RTF</td></tr>
+<tr><td>GPT-SoVITS</td><td>4.5s</td><td>~11.5s</td><td>Best voice cloning</td></tr>
+<tr><td>Fish Speech</td><td>Too slow</td><td>68s</td><td>Not viable locally</td></tr>
+</table>
+
+<p>ElevenLabs won on quality and latency for cloud use. Edge-tts remains the best free option. Both are available as switchable engines.</p>
+
+<h3>Sensitive Data Masking</h3>
+
+<p>Passwords, tokens, and credentials mentioned in your messages are now automatically masked in bot responses. Two-layer detection: exact match from user input + keyword-proximity scanning in responses.</p>
+
+<h3>Other Improvements</h3>
+
+<ul>
+<li>Streaming subprocess buffer increased from 64KB to 4MB — fixes truncation of large tool results</li>
+</ul>
+
+<hr>
+
+<p>Full changelog: <a href="https://github.com/rssprivacy-commits/claude-bridge/blob/main/CHANGELOG.md">CHANGELOG.md</a></p>
