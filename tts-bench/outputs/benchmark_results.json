@@ -1,0 +1,68 @@
+[
+  {
+    "model": "0.6B-CustomVoice-8bit",
+    "load_time_s": 2.68,
+    "texts": {
+      "short_22ch": {
+        "char_count": 22,
+        "avg_time_s": 0.832,
+        "min_time_s": 0.824,
+        "max_time_s": 0.837,
+        "audio_duration_s": 4.72,
+        "rtf_avg": 0.176,
+        "chars_per_sec": 26.5
+      },
+      "medium_54ch": {
+        "char_count": 56,
+        "avg_time_s": 2.256,
+        "min_time_s": 1.964,
+        "max_time_s": 2.513,
+        "audio_duration_s": 11.2,
+        "rtf_avg": 0.201,
+        "chars_per_sec": 24.8
+      },
+      "long_200ch": {
+        "char_count": 181,
+        "avg_time_s": 7.785,
+        "min_time_s": 7.593,
+        "max_time_s": 8.055,
+        "audio_duration_s": 44.96,
+        "rtf_avg": 0.173,
+        "chars_per_sec": 23.3
+      }
+    }
+  },
+  {
+    "model": "1.7B-CustomVoice-8bit",
+    "load_time_s": 1.18,
+    "texts": {
+      "short_22ch": {
+        "char_count": 22,
+        "avg_time_s": 1.015,
+        "min_time_s": 0.934,
+        "max_time_s": 1.142,
+        "audio_duration_s": 4.48,
+        "rtf_avg": 0.226,
+        "chars_per_sec": 21.7
+      },
+      "medium_54ch": {
+        "char_count": 56,
+        "avg_time_s": 2.773,
+        "min_time_s": 2.567,
+        "max_time_s": 3.04,
+        "audio_duration_s": 14.8,
+        "rtf_avg": 0.187,
+        "chars_per_sec": 20.2
+      },
+      "long_200ch": {
+        "char_count": 181,
+        "avg_time_s": 9.114,
+        "min_time_s": 8.537,
+        "max_time_s": 9.462,
+        "audio_duration_s": 44.4,
+        "rtf_avg": 0.205,
+        "chars_per_sec": 19.9
+      }
+    }
+  }
+]
